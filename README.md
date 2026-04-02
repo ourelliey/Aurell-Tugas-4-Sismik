@@ -1,0 +1,1 @@
+# Aurell-Tugas-4-Sismik
