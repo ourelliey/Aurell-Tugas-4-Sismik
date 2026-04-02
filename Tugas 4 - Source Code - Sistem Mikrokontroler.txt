@@ -1,0 +1,57 @@
+/* * Tugas 4 - Sistem Mikrokontroler
+ * Nama: Aurellia Nabila Rahma Putri | NIM: H1H024066
+ * Update: Perbaikan Logika Sekuensial 4 Simpang
+ */
+
+// Mapping pin berdasarkan gambar: Barat(2,3,4), Timur(5,6,7), Selatan(8,9,10), Utara(11,12,13)
+// Indeks Array: 0=Utara, 1=Timur, 2=Selatan, 3=Barat
+int pinMerah[]  = {13, 7, 10, 4}; 
+int pinKuning[] = {12, 6, 9, 3};
+int pinHijau[]  = {11, 5, 8, 2};
+
+void setup() {
+  // Set semua 12 pin sebagai OUTPUT [cite: 156, 206]
+  for (int i = 0; i < 4; i++) {
+    pinMode(pinMerah[i], OUTPUT);
+    pinMode(pinKuning[i], OUTPUT);
+    pinMode(pinHijau[i], OUTPUT);
+  }
+}
+
+void loop() {
+  // Menjalankan siklus tiap arah secara berurutan [cite: 13, 14]
+  aktifkanSimpang(0); // Siklus Utara
+  aktifkanSimpang(1); // Siklus Timur
+  aktifkanSimpang(2); // Siklus Selatan
+  aktifkanSimpang(3); // Siklus Barat
+}
+
+// Fungsi reset: Semua Merah HIGH, Kuning & Hijau LOW [cite: 15, 107]
+void setSemuaMerah() {
+  for (int i = 0; i < 4; i++) {
+    digitalWrite(pinMerah[i], HIGH);
+    digitalWrite(pinKuning[i], LOW);
+    digitalWrite(pinHijau[i], LOW);
+  }
+}
+
+void aktifkanSimpang(int i) {
+  setSemuaMerah(); // Pastikan kondisi aman sebelum ada yang jalan [cite: 15, 21]
+
+  // --- FASE HIJAU (5 Detik) --- [cite: 17, 122]
+  digitalWrite(pinMerah[i], LOW);  
+  digitalWrite(pinHijau[i], HIGH); 
+  delay(5000); 
+
+  // --- FASE KUNING (Kedip 3 Kali) --- [cite: 18, 126]
+  digitalWrite(pinHijau[i], LOW);
+  for (int j = 0; j < 3; j++) {
+    digitalWrite(pinKuning[i], HIGH);
+    delay(333); // Durasi nyala [cite: 130]
+    digitalWrite(pinKuning[i], LOW);
+    delay(333); // Durasi mati [cite: 132]
+  }
+  
+  // Selesai kuning, nyalakan merah lagi sebelum pindah ke i berikutnya [cite: 19, 135]
+  digitalWrite(pinMerah[i], HIGH);
+}
